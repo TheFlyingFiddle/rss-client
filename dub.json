@@ -1,0 +1,17 @@
+{
+	"authors": [
+		"Lukas Borin"
+	],
+	"description": "A simple web based rss client",
+	"name": "rss-client",
+	"dependencies": {
+		"vibe-d": "~>0.7.28",
+        "static-sql": "*",
+		"jwt": "~>0.4.0"
+	},
+	"license": "MIT",
+	"copyright": "Copyright © 2017, Lukas",
+	"versions": [
+		"VibeDefaultMain"
+	]
+}

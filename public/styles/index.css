@@ -1,0 +1,28 @@
+body {
+  background-color: #BBB;
+}
+
+h1 {
+  text-align: center;
+}
+
+#container {
+  position: relative;
+}
+
+#container > * {
+  position: absolute;
+  left: 50%;
+  width: auto;
+}
+
+#add_feed {
+    align-items: center;
+    width: 20%;
+}
+
+#content-center > * {
+  position: relative;
+  left: -50%;
+  width:100%;
+}

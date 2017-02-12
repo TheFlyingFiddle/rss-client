@@ -1,0 +1,98 @@
+database rss_db;
+
+alias URL = varchar(100);
+alias Category = varchar(50);
+
+table users {
+    int id auto_increment primary;
+    varchar(50) email unique;
+}
+
+table feeds {
+    int id auto_increment primary;
+    url source;
+    url domain;
+    text title;
+    text content;
+    datetime timeAdded;
+    time refreshTime;
+}
+
+table feed_category {
+    int feed primary foregin feeds.id;
+    Category category primary;
+}
+
+table subs {
+    int user primary foregin users.id;
+    int feed primary foregin feeds.id;
+}
+
+table items {
+    url link primary;
+    int feed foregin feeds.id;
+    text content;
+    datetime time;
+}
+
+change timeAdded(int @id, datetime @time) {
+  update feeds
+  set timeAdded = @time
+  where id = @id;
+}
+
+drop user(url email)  {
+  delete from subs where subs.user = get user(email);
+  delete from users where id = email;
+}
+
+drop feed(url feed) {
+  int feedID = get feed(feed);
+  delete from subs where subs.feed = feedID;
+  delete from items where items.feed = feedID;
+  delete from feeds where feeds.source = feed or feeds.domain = feed;
+}
+
+drop item(url item) {
+  delete from items where link = item;
+}
+
+//We should auto generate insert method into the tables
+//everything that is not auto_increment should be required
+get user(url email) {
+    select id from users where users.email = email;
+}
+
+get user(url feed) {
+    select if from feeds where users.email = email;
+}
+
+get subscriptions(url email) {
+    int user = get user(email);
+    select url, title from feeds
+    join subs
+    on feeds.id = subs.feed
+    where subs.user = user;
+}
+
+get allUserItems(url email) {
+    get allUserItems(get user(email));
+}
+
+get allUserItems(int userID) {
+  select i.url, i.title, i.content
+  from items as i join subs as s
+  on i.feed = s.feed
+  where s.user = user
+  order by i.time desc
+}
+
+get items(int feedID) {
+  select url, title, content from items
+  where feed = feedID
+  order by items.time desc;
+}
+
+get items(url feed) {
+  get items(get feed(feed));
+}

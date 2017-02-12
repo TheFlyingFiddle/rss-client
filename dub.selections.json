@@ -1,0 +1,15 @@
+{
+	"fileVersion": 1,
+	"versions": {
+		"diet-ng": "1.1.1",
+		"jwt": "0.4.0",
+		"libasync": "0.7.9",
+		"libevent": "2.0.2+2.0.16",
+		"memutils": "0.4.8",
+		"mysql-lited": "0.3.15",
+		"openssl": "1.1.5+1.0.1g",
+		"pegged": "0.3.3",
+		"static-sql": "~master",
+		"vibe-d": "0.7.30"
+	}
+}

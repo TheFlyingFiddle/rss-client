@@ -1,0 +1,161 @@
+html, body {
+  height: 100%;
+  min-height: 100%;
+  background-color: #F2F2F2;
+}
+
+button {
+    background-color: gray;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+
+body {
+    display: flex;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+#subs_container {
+    position: relative;
+    min-width: 250px;
+    max-width: 275px;
+}
+
+#subs {
+    flex-direction: column;
+    font-size: 17px;
+    color: #6e6e6e;
+}
+
+#subs div {
+    width: 100%;
+    padding: 5px 0 5px 0;
+}
+
+#subs div:hover {
+    background-color: #bbbbbb;
+    cursor: pointer;
+}
+
+div.feed_rss {
+  display: flex;
+  height: 30px;
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+}
+
+div.feed_rss_selected {
+  display: flex;
+  height: 30px;
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  color: #212121;
+}
+
+img.feed_icon {
+  display: block;
+  margin: 10px;
+  width: 20px;
+  height: 20px;
+}
+
+span.feed_title {
+  display: block;
+}
+
+#add_feed {
+    position: absolute;]
+    margin-top: 2px;
+    margin-bottom: 2px;
+    bottom: 3px;
+    height: 50px;
+    width: 100%;
+}
+#add_feed_btn {
+    position: relative;
+    margin; 2px;
+}
+
+#content_container {
+  flex-grow: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-x: auto;
+  direction: ltr;
+}
+
+hr {
+  padding: 0;
+  margin: 0;
+}
+
+div.content_item {
+  display: block;
+  width: 90%;
+  height: 15px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin: 0 auto;
+  user-select: none;
+  background-color: #ffffff;
+  border: 1px solid #dedede;
+}
+
+div.content_item:hover {
+    background-color: #bbbbbb;
+    cursor: pointer;
+}
+
+div.content_item > div.item_container {
+  display: none;
+}
+
+div.content_item_active {
+    width: 95%;
+    margin: 0 auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-color: #ffffff;
+    box-shadow: 0px 0px 5px #888888;
+
+}
+
+div.content_item_active > div.item_container {
+  display: block;
+}
+
+div.content_item_active > span.content_title {
+  font-weight: bold;
+}
+
+span.content_title {
+  display: block;
+  padding-left: 15px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  color: #212121;
+}
+
+
+div.item_container {
+  display: block;
+  padding: 20px;
+}
+
+
+pre {
+  padding: 10px;
+  background-color: #bbb;
+}
