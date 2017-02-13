@@ -13,45 +13,66 @@ function sendReq(method, url, value, resp)
     req.send(value);
 }
 
-Element.prototype.insertChildAt = function(child, index) {
-  if(index >= this.children.length) {
-    this.appendChild(child);
-  } else {
-    this.insertBefore(child, this.children[index]);
+function hideActiveElement() {
+  let active = document.getElementById("content").getElementsByClassName('content_item_active');
+  let elem   = active.length > 0 ? active[0] : null;
+  if(elem) {
+    elem.className = "content_item";
+    let itemNode = elem.getElementsByClassName("item_container")[0];
+    itemNode.children[1].innerHTML = "";
   }
-};
+}
 
 function toggleItemHTML(div, item) {
   let status = div.className;
-  let children = document.getElementById("content_container").children;
-  for(let i = 0; i < children.length; i++) {
-    children[i].className = "content_item";
-  }
+  hideActiveElement();
 
   if(status === "content_item") {
     div.className = "content_item_active";
+    let itemNode = div.getElementsByClassName("item_container")[0];
+    let content  = itemNode.children[1];
+    content.innerHTML = itemNode.data;
+    let links = itemNode.getElementsByTagName("a");
+    for(let i = 0; i < links.length; i++) {
+      links[i].target = "_blank";
+    }
   }
 }
 
 
 function addItem(item) {
-  let content = document.getElementById("content_container");
+  let content = document.getElementById("content");
   let div = document.createElement("div");
   div.className = "content_item";
 
-  let itemContent = document.createElement("div");
-  itemContent.className = "item_container";
-  itemContent.innerHTML = item.content;
+  let titleCont = document.createElement("div");
+  titleCont.className = "content_title_container";
 
   let title = document.createElement("span");
   title.className += "content_title";
   title.innerHTML = item.title;
 
-  div.appendChild(title);
-  div.appendChild(itemContent);
+  let itemCont = document.createElement("div");
+  itemCont.className = "item_container";
+  itemCont.data = item.content;
+
+  let link = document.createElement("a");
+  link.href = item.url;
+  link.target = "_blank";
+  link.innerHTML = (new Date(item.time).toUTCString());
+  link.className = "item_link";
+
+  let itemContent = document.createElement("div");
+
+  titleCont.appendChild(title);
+  div.appendChild(titleCont);
+
+  itemCont.appendChild(link);
+  itemCont.appendChild(itemContent);
+  div.appendChild(itemCont);
   content.appendChild(div);
 
-  div.onclick = () => toggleItemHTML(div, item);
+  titleCont.onclick = () => toggleItemHTML(div, item);
 }
 
 function getItems(id) {
@@ -66,7 +87,7 @@ function getItems(id) {
 function feedClicked(div, feed) {
   div.className = "feed_rss_selected";
 
-  let content = document.getElementById("content_container");
+  let content = document.getElementById("content");
   while (content.hasChildNodes()) {
     content.removeChild(content.lastChild);
   }
@@ -121,14 +142,5 @@ getSubs();
 
 window.onload = (x) => {
     addSubsHtml({title: "all", id:"0"});
-
-    document.getElementById("add_feed_btn").addEventListener("click", () => {
-        let feed = prompt("Add a feed!");
-        let subs = document.getElementById("subs");
-        let present = subs.feeds.find((x) => x.source === feed);
-        if(!present)
-        {
-            addFeed(feed);
-        }
-    });
+    addSubsHtml({title: "unread", id:"0"});
 };
