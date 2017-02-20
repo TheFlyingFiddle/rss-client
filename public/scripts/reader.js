@@ -13,29 +13,43 @@ function sendReq(method, url, value, resp)
     req.send(value);
 }
 
-function hideActiveElement() {
-  let active = document.getElementById("content").getElementsByClassName('content_item_active');
+function hideActiveElement(content) {
+  let active = content.getElementsByClassName('content_item_active');
   let elem   = active.length > 0 ? active[0] : null;
   if(elem) {
     elem.className = "content_item";
     let itemNode = elem.getElementsByClassName("item_container")[0];
-    itemNode.children[1].innerHTML = "";
+    itemNode.removeChild(itemNode.lastChild);
   }
 }
 
-function toggleItemHTML(div, item) {
+function toggleItemHTML(content, div) {
   let status = div.className;
-  hideActiveElement();
+  hideActiveElement(content);
 
   if(status === "content_item") {
     div.className = "content_item_active";
     let itemNode = div.getElementsByClassName("item_container")[0];
-    let content  = itemNode.children[1];
-    content.innerHTML = itemNode.data;
-    let links = itemNode.getElementsByTagName("a");
-    for(let i = 0; i < links.length; i++) {
-      links[i].target = "_blank";
+
+
+    let iframe = document.createElement("iframe");
+    itemNode.appendChild(iframe);
+    iframe.id = "content_frame";
+    iframe.scrolling = "no";
+    iframe.contentWindow.document.open();
+    iframe.contentWindow.document.write(
+      "<body>" +
+        "<script src=\"https://code.jquery.com/jquery-3.1.1.min.js\"></script>" +
+        itemNode.data +
+      "</body>");
+    iframe.contentWindow.document.close();
+    iframe.height = "0";
+    iframe.onload = function() {
+      let height = this.contentWindow.document.body.scrollHeight;
+      this.style.height = height + "px";
     }
+
+    document.body.scrollTop = div.offsetTop - 100;
   }
 }
 
@@ -59,20 +73,18 @@ function addItem(item) {
   let link = document.createElement("a");
   link.href = item.url;
   link.target = "_blank";
-  link.innerHTML = (new Date(item.time).toUTCString());
+  link.innerHTML = (new Date(item.time).toLocaleString());
   link.className = "item_link";
 
-  let itemContent = document.createElement("div");
 
   titleCont.appendChild(title);
   div.appendChild(titleCont);
 
   itemCont.appendChild(link);
-  itemCont.appendChild(itemContent);
   div.appendChild(itemCont);
   content.appendChild(div);
 
-  titleCont.onclick = () => toggleItemHTML(div, item);
+  titleCont.onclick = () => toggleItemHTML(content, div);
 }
 
 function getItems(id) {
@@ -115,6 +127,32 @@ function addSubsHtml(feed) {
   subs.appendChild(div);
 }
 
+function addFeed() {
+  let input = prompt("Add a feed");
+  sendReq("POST", "subs/add", input, (resp) => {
+    let obj = JSON.parse(resp);
+    let feed = obj.feed;
+    addSubsHtml(feed);
+  })
+}
+
+function addAddButton() {
+  let subs = document.getElementById("subs");
+  let div   = document.createElement("div");
+  div.className += "feed_rss";
+  div.onclick = () => addFeed();
+  let icon = document.createElement("img");
+  icon.src = "images/rss-icon.png";
+  icon.className += "feed_icon";
+  let title = document.createElement("span");
+  title.className += "feed_title";
+  title.innerHTML = "add feed";
+
+  div.appendChild(icon);
+  div.appendChild(title);
+  subs.appendChild(div);
+}
+
 function getSubs()
 {
     sendReq("GET", "subs/all", null, (resp) => {
@@ -124,17 +162,8 @@ function getSubs()
         for(let feed of obj) {
             addSubsHtml(feed);
         }
-    });
-}
 
-function addFeed(feed)
-{
-    sendReq("POST", "subs/add", feed, (resp) => {
-        let obj = JSON.parse(resp);
-        if(obj.success) {
-            addSubsHtml(obj.feed);
-        }
-        console.log("We added a feed!");
+        addAddButton();
     });
 }
 

@@ -64,13 +64,7 @@ void addSubscription(HTTPServerRequest req, HTTPServerResponse resp)
 	insertFeeds([url]);
 	auto feed = client.getFeed(url);
 	client.addSubscription(user, feed.id);
-	
-	//Verbose... also allocates a bunch of stuff. 
-	Json json = Json.emptyObject;
-	json["success"] = true;
-	auto jfeed = Json(["id": Json(feed.id), "title": Json(feed.title)]);
-	json["feed"] = jfeed;
-	resp.writeBody(json.toString());
+	resp.writeBody(feed.serializeToJsonString());
 }
 
 void getSubscriptions(HTTPServerRequest req, HTTPServerResponse resp)
@@ -142,6 +136,7 @@ shared static this() {
 	auto settings = new HTTPServerSettings;
 	settings.port = 8080;
 	settings.bindAddresses = ["::1", "127.0.0.1"];
+	settings.useCompressionIfPossible = true;
 	listenHTTP(settings, router);
 
 	setTimer(1.seconds, toDelegate(&pollFeeds), false);

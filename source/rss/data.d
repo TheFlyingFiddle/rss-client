@@ -46,13 +46,24 @@ struct RSSItem
 
 	DateTime time()
 	{
+		DateTime dateTime;
 		try
 		{
-			return cast(DateTime)parseRFC822DateTime(pubDate);
+			dateTime = cast(DateTime)parseRFC822DateTime(pubDate);
 		}
 		catch(Exception e) 
 		{
-			return cast(DateTime)Clock.currTime;
+			dateTime = cast(DateTime)Clock.currTime;
 		}
+
+		//Some items seem to be in the future
+		//This could be from errors when creating the feed
+		//But future items make no sense in the context
+		//of an rss feed reader. 
+		if(dateTime > cast(DateTime)Clock.currTime) {
+			dateTime = cast(DateTime)Clock.currTime;
+		}
+
+		return dateTime;
 	}
 }

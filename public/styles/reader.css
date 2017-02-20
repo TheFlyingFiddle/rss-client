@@ -1,5 +1,6 @@
 
 body {
+    font-family: 'Hind', sans-serif;
     background-color: #F2F2F2;
     padding: 0;
     margin: 0;
@@ -59,7 +60,7 @@ img.settings {
 }
 
 #subs div:hover {
-    background-color: #bbbbbb;
+    background-color: #eeeeee;
     cursor: pointer;
 }
 
@@ -126,7 +127,7 @@ div.content_item_active {
     margin-left: auto;
     margin-right: auto;
     background-color: #ffffff;
-    box-shadow: 0px 0px 5px #888888;
+    box-shadow: 0px 0px 5px #888888
 }
 
 
@@ -138,17 +139,18 @@ div.content_title_container {
 }
 
 div.content_title_container:hover{
-    background-color: #dddddd;
+    background-color: #eeeeee;
     cursor: pointer;
 }
 
 div.content_item_active > div.content_title_container {
-  background-color: #dddddd;
+  background-color: #eeeeee;
   font-weight: bold;
 }
 
 div.item_container {
   display: hide;
+  transition: height 1s;
   padding: 20px;
 }
 
@@ -156,11 +158,17 @@ div.content_item_active > div.item_container {
   display: block;
 }
 
+#content_frame {
+  width: 100%;
+  border: 0px;
+  overflow: hidden;
+}
+
 a.item_link {
   color: black;
   padding: 10px;
   margin: auto;
-  display: block;
+  display: inline-block;
 }
 
 span.content_title {
@@ -172,7 +180,9 @@ span.content_title {
   color: #212121;
 }
 
-
+pre {
+  background-color: #dddddd;
+}
 
 img {
   max-width: 100%;
